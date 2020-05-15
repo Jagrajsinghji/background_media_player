@@ -12,11 +12,14 @@ class BackgroundMediaPlayer {
   static const EventChannel _eventChannel =
       const EventChannel('background_media_player_event');
 
+  static StreamSubscription _subscription;
+
   static RepeatMode repeatMode;
   static ShuffleMode shuffleMode;
   static PlaybackState playbackState;
   static int currentItem = 0;
-  static List<MediaItem> mediaQueue = [];
+  static final List<MediaItem> mediaQueue = [];
+   static Map<String, Function> _listeners = {};
 
   static void init() async {
     Map data = await _channel.invokeMethod("Init");
@@ -27,81 +30,55 @@ class BackgroundMediaPlayer {
     List queue = data['mediaQueue'] ?? [];
     mediaQueue.clear();
     queue.forEach((element) => mediaQueue.add(MediaItem.fromMap(element)));
-    _eventChannel.receiveBroadcastStream().listen(_onEvent);
+   _subscription= _eventChannel.receiveBroadcastStream().listen(_onEvent);
   }
 
-  static void setQueue(List<MediaItem> mediaQueue) async {
+  static void setQueue(List<MediaItem> mQueue) async {
+    mediaQueue.clear();
+    mediaQueue.addAll(mQueue);
     List<Map<String, String>> queue = [];
     mediaQueue.forEach((element) => queue.add(element.toMap()));
     await _channel.invokeMethod("SetQueue", queue);
   }
 
-  static void setRepeatMode(RepeatMode mode) async {
+   static void setRepeatMode(RepeatMode mode) async {
+     repeatMode =mode;
     await _channel.invokeMethod("SetRepeatMode", mode.index - 1);
   }
 
-  static Future<RepeatMode> getRepeatMode() async {
-    int rMode = await _channel.invokeMethod("GetRepeatMode");
-    repeatMode = getRepeatModeFromInt(rMode);
-    return repeatMode;
-  }
-
   static void setShuffleMode(ShuffleMode mode) async {
+    shuffleMode =mode;
     await _channel.invokeMethod("SetShuffleMode", mode.index - 1);
   }
 
-  static Future<ShuffleMode> getShuffleMode() async {
-    int rMode = await _channel.invokeMethod("GetShuffleMode");
-    shuffleMode = getShuffleModeFromInt(rMode);
-    return shuffleMode;
-  }
-
-  static Future<PlaybackState> getPlaybackState() async {
-    int rMode = await _channel.invokeMethod("GetPlaybackState");
-    playbackState = getPlaybackStateFromInt(rMode);
-    return playbackState;
-  }
 
   static Future<int> getCurrentIndex() async {
     currentItem = await _channel.invokeMethod("GetCurrentIndex");
+    print('current index is $currentItem');
     return currentItem;
   }
 
-  static Future<List<MediaItem>> getQueue() async {
-    List queue =
-        await _channel.invokeMethod("GetQueue") ?? [];
-    mediaQueue.clear();
-    queue.forEach((element) => mediaQueue.add(MediaItem.fromMap(element)));
-    return mediaQueue;
-  }
-
+ 
   static void play(int index) async {
     currentItem = index;
     await _channel.invokeMethod('Play', index);
-    await getPlaybackState();
   }
 
   static void toggle() async {
     await _channel.invokeMethod('Toggle');
-    await getPlaybackState();
   }
 
   static void next() async {
     await _channel.invokeMethod('Next');
-    await getPlaybackState();
-    await getCurrentIndex();
   }
 
   static void prev() async {
     await _channel.invokeMethod('Prev');
-    await getPlaybackState();
-    await getCurrentIndex();
 
   }
 
   static void stop() async {
     await _channel.invokeMethod('Stop');
-    await getPlaybackState();
   }
 
   static void seekTo(Duration duration) async {
@@ -109,9 +86,53 @@ class BackgroundMediaPlayer {
     await _channel.invokeMethod("SeekTo", millis);
   }
 
-  static _onEvent(dynamic name)async{
-    print("Event performed: $name");
+  static _onEvent(dynamic event)async{
+    await getCurrentIndex();
+    List<String> data =event.toString().split(":");
+    if(_listeners.containsKey(data[0])){
+      /// listener is present, now execute the callback
+      switch (data[0]) {
+        case "UpdateProgress":
+              assert(data.length==3);
+              int _currentPos = int.parse(data[1]??"0");
+              int _duration = int.parse(data[2]??"0");
+              _listeners[data[0]](_currentPos,_duration);
+          break;
+          case "UpdateState":
+            assert(data.length==2);
+              int _state = int.parse(data[1]??"0");
+              _listeners[data[0]](getPlaybackStateFromInt(_state));
+          break;
+          case "BufferUpdate":
+          assert(data.length==3);
+              int _percent = int.parse(data[1]??"0");
+              int _duration = int.parse(data[2]??"0");
+              _listeners[data[0]](_percent,_duration);
+          break;
+        default:
+        print("no callback for event ${data[0]}");
+      }
+    }
+  }
 
+  static void onUpdateProgress(Function(int position,int duration) callback){
+    _listeners.addAll({
+      "UpdateProgress":callback
+    });
+  }
+  static void onUpdateState(Function(PlaybackState state) callback){
+    _listeners.addAll({
+      "UpdateState":callback
+    });}
+  static void onBufferUpdate(Function(int percent, int duration)callback){
+    _listeners.addAll({
+      "BufferUpdate":callback
+    });
+  }  
 
+/// cancels event channel subscription only.
+/// caution : it does not destroys the media player
+  static destroy(){
+    _subscription?.cancel();
   }
 }

@@ -8,7 +8,6 @@ import android.view.KeyEvent;
 
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,8 +49,8 @@ public class BackgroundMediaPlayerPlugin implements FlutterPlugin {
                 break;
                 case "SetQueue":
                     List<Map<String, String>> args = (List<Map<String, String>>) call.arguments;
-                        MediaSessionCallback.mediaQueue.clear();
-                        MediaSessionCallback.mediaQueue.addAll(args);
+                    MediaSessionCallback.mediaQueue.clear();
+                    MediaSessionCallback.mediaQueue.addAll(args);
                     result.success(true);
                     break;
                 case "SetRepeatMode":
@@ -61,12 +60,6 @@ public class BackgroundMediaPlayerPlugin implements FlutterPlugin {
                     } else
                         result.success(-1);
                     break;
-                case "GetRepeatMode":
-                    if (MediaSessionCallback.mediaSessionCompat != null)
-                        result.success(MediaSessionCallback.mediaSessionCompat.getController().getRepeatMode());
-                    else
-                        result.success(-1);
-                    break;
                 case "SetShuffleMode":
                     if (MediaSessionCallback.mediaSessionCompat != null) {
                         MediaSessionCallback.mediaSessionCompat.setShuffleMode((int) call.arguments);
@@ -74,27 +67,9 @@ public class BackgroundMediaPlayerPlugin implements FlutterPlugin {
                     } else
                         result.success(-1);
                     break;
-                case "GetShuffleMode":
-                    if (MediaSessionCallback.mediaSessionCompat != null)
-                        result.success(MediaSessionCallback.mediaSessionCompat.getController().getShuffleMode());
-                    else
-                        result.success(-1);
-                    break;
-                case "GetPlaybackState":
-                    if (MediaSessionCallback.mediaSessionCompat != null)
-                        result.success(MediaSessionCallback.mediaSessionCompat.getController().getPlaybackState().getState());
-                    else
-                        result.success(0);
-                    break;
                 case "GetCurrentIndex":
                     result.success(MediaSessionCallback.currentItem);
                     break;
-                case "GetQueue": {
-                    Map<Object, Object> data = new HashMap<>();
-                    data.put("mediaQueue", MediaSessionCallback.mediaQueue);
-                    result.success(data);
-                }
-                break;
                 case "Play":
                     MediaSessionCallback.currentItem = (int) call.arguments;
                     intent.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY));
@@ -122,7 +97,8 @@ public class BackgroundMediaPlayerPlugin implements FlutterPlugin {
                     result.success("Stop");
                     break;
                 case "SeekTo":
-
+                    if (MediaSessionCallback.mediaSessionCompat != null)
+                        MediaSessionCallback.mediaSessionCompat.getController().getTransportControls().seekTo((long) call.arguments);
                     break;
 
                 default:

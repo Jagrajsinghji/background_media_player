@@ -38,11 +38,33 @@ class _MyAppState extends State<MyApp> {
     })
   ];
 
+  int position, duration, percent;
+  PlaybackState state;
   @override
   void initState() {
     super.initState();
     BackgroundMediaPlayer.init();
     BackgroundMediaPlayer.setQueue(mediaQueue);
+    BackgroundMediaPlayer.onBufferUpdate((percent, duration) {
+      if (mounted)
+        setState(() {
+          this.percent = percent;
+          this.duration = duration;
+        });
+    });
+    BackgroundMediaPlayer.onUpdateProgress((position, duration) {
+      if (mounted)
+        setState(() {
+          this.position = position;
+          this.duration = duration;
+        });
+    });
+    BackgroundMediaPlayer.onUpdateState((state) {
+      if (mounted)
+        setState(() {
+          this.state = state;
+        });
+    });
   }
 
   @override
@@ -85,10 +107,11 @@ class _MyAppState extends State<MyApp> {
               child: Text("Stop"),
             ),
             RaisedButton(
-              onPressed: () {
-              },
+              onPressed: () {},
               child: Text("Send"),
             ),
+            Text(
+                "Position : $position\nDuration : $duration\nBufferPercent : $percent\nState : $state\n")
           ],
         ),
       ),
