@@ -8,12 +8,13 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application>
-        <service android:name="com.akaalapps.background_media_player.MediaPlaybackService" >
+        <service android:name="com.akaalapps.background_media_player.MediaPlaybackService">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </service>
-        <receiver android:name="androidx.media.session.MediaButtonReceiver" >
+
+        <receiver android:name="androidx.media.session.MediaButtonReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>

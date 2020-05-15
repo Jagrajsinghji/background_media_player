@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:background_media_player/background_media_player.dart';
+
 
 void main() {
   const MethodChannel channel = MethodChannel('background_media_player');
@@ -17,7 +17,5 @@ void main() {
     channel.setMockMethodCallHandler(null);
   });
 
-  test('getPlatformVersion', () async {
-    expect(await BackgroundMediaPlayer.platformVersion, '42');
-  });
+
 }

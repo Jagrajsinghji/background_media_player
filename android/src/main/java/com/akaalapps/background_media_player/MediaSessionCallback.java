@@ -6,12 +6,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.support.v4.media.MediaMetadataCompat;
@@ -19,7 +21,14 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
-import java.io.IOException;
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -38,42 +47,111 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 class MediaSessionCallback extends MediaSessionCompat.Callback implements AudioManager.OnAudioFocusChangeListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnErrorListener {
 
-    final private Handler mHandler = new Handler(Looper.getMainLooper());
-    final private NoisyReceiver noisyReceiver = new NoisyReceiver();
+    final private String TAG = "MediaSessionCallback";
     final private Context context;
-    final private NotificationManager notificationManager;
-    final private MediaSessionCompat mediaSessionCompat;
-    final private MediaPlaybackService mediaPlaybackService;
+    final private Handler mHandler = new Handler(Looper.getMainLooper());
 
-    private AudioFocusRequest audioFocusRequest;
-    private PlaybackStateCompat playbackStateCompat;
-    private AudioManager audioManager;
-    private MediaPlayer mMediaPlayer;
+    final private Handler notificationArtHandler;
 
-    MediaSessionCallback(Context context, MediaSessionCompat mediaSessionCompat, MediaPlaybackService mediaPlaybackService) {
-        this.context = context;
-        this.mediaSessionCompat = mediaSessionCompat;
-        this.mediaPlaybackService = mediaPlaybackService;
+    final private NoisyReceiver noisyReceiver = new NoisyReceiver();
+
+    static final private MediaMetadataCompat.Builder mBuilder = new MediaMetadataCompat.Builder();
+    static final private PlaybackStateCompat.Builder plBuilder = new PlaybackStateCompat.Builder();
+
+    static private AudioFocusRequest audioFocusRequest;
+    static private PlaybackStateCompat playbackStateCompat;
+    static private AudioManager audioManager;
+    static private NotificationManager notificationManager;
+    static private MediaPlayer mMediaPlayer;
+    static private MediaMetadataCompat metadataCompat;
+    static private MediaPlaybackService mediaPlaybackService;
+
+    static List<Map<String, String>> mediaQueue = new ArrayList<Map<String, String>>();
+    static int currentItem = 0;
+    static MediaSessionCompat mediaSessionCompat;
+    static final String SERVICE_EVENT = "Background_Media_Player__Service_Event";
+
+
+    MediaSessionCallback(Context appcontext, MediaSessionCompat mediasessionCompat, MediaPlaybackService playbackService) {
+        context = appcontext;
+        mediaSessionCompat = mediasessionCompat;
+        mediaPlaybackService = playbackService;
         notificationManager = ((NotificationManager) context.getSystemService(NOTIFICATION_SERVICE));
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        this.mMediaPlayer = createMediaPlayer();
+        mMediaPlayer = createMediaPlayer();
+        HandlerThread bgThread = new HandlerThread("BitmapLoaderThread");
+        bgThread.start();
+        notificationArtHandler = new Handler(bgThread.getLooper());
+        callEvent("Initialised");
     }
 
-    private void updateProgress() {
+
+    private void callEvent(String name) {
+        Intent intent = new Intent(SERVICE_EVENT);
+        intent.putExtra("name", name);
+        context.sendBroadcast(intent);
+    }
+
+    private void updateProgress(String tag) {
         mHandler.postDelayed(() -> {
+//            Log.e("Runnable", tag);
             if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
-                long duration = mMediaPlayer.getDuration();
                 int progress = mMediaPlayer.getCurrentPosition();
-                playbackStateCompat = new PlaybackStateCompat.Builder()
+                playbackStateCompat = plBuilder
                         .setState(PlaybackStateCompat.STATE_PLAYING, progress, 1.0f)
-                        .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_STOP | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_PAUSE)
+                        .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_STOP | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_SEEK_TO)
                         .build();
                 mediaSessionCompat.setPlaybackState(playbackStateCompat);
-                mediaSessionCompat.setMetadata(new MediaMetadataCompat.Builder().putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration).build());
-                updateProgress();
+                try {
+                    long duration = mMediaPlayer.getDuration();
+                    setMetaData(duration, true);
+                } catch (Exception err) {
+                    Log.e(TAG, "updateProgress: ", err);
+                }
+                callEvent("UpdateProgress");
+                updateProgress(tag);
             }
         }, 1000L);
 
+    }
+
+    private void setMetaData(long duration, boolean inLoop) {
+        MediaItem item = MediaItem.fromMap(mediaQueue.get(currentItem));
+
+        metadataCompat = mBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, item.title)
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, item.artist)
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, item.album)
+                .build();
+        mediaSessionCompat.setMetadata(metadataCompat);
+        if (!inLoop)
+            notificationArtHandler.postDelayed(() -> {
+                Bitmap bitmap = getBitmap(item.albumArt);
+                metadataCompat = mBuilder
+                        .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap)
+                        .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap)
+                        .putBitmap(MediaMetadataCompat.METADATA_KEY_ART, bitmap).build();
+                mediaSessionCompat.setMetadata(metadataCompat);
+            }, 0);
+
+    }
+
+    private Bitmap getBitmap(String uri) {
+        try {
+            return Glide.with(context)
+                    .asBitmap()
+                    .override(600)
+                    .load(uri)
+                    .submit()
+                    .get();
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private MediaPlayer createMediaPlayer() {
@@ -94,19 +172,23 @@ class MediaSessionCallback extends MediaSessionCompat.Callback implements AudioM
         mMediaPlayer.setOnCompletionListener(this);
         mMediaPlayer.setOnErrorListener(this);
         mMediaPlayer.setOnBufferingUpdateListener(this);
-        playbackStateCompat = new PlaybackStateCompat.Builder()
+        playbackStateCompat = plBuilder
                 .setState(PlaybackStateCompat.STATE_NONE, 0, 1.0f)
                 .setActions(PlaybackStateCompat.ACTION_PLAY)
                 .build();
-        this.mediaSessionCompat.setPlaybackState(playbackStateCompat);
-        Log.i("MediaSessionCallback", "Media Player Created");
+        mediaSessionCompat.setPlaybackState(playbackStateCompat);
+        Log.e(TAG, "Media Player Created");
         return mMediaPlayer;
     }
 
     void destroy() {
+        mediaQueue = null;
+        notificationArtHandler.getLooper().quit();
+        notificationManager.cancel(1);
         mMediaPlayer.release();
         mMediaPlayer = null;
-        Log.i("MediaSessionCallback", "Media Player Released");
+        callEvent("Destroy");
+        Log.e(TAG, "Media Player Released");
     }
 
     @Override
@@ -147,7 +229,7 @@ class MediaSessionCallback extends MediaSessionCompat.Callback implements AudioM
         super.onPlay();
         mMediaPlayer = mMediaPlayer == null ? createMediaPlayer() : mMediaPlayer;
         int result;
-        Notification notification;
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             audioFocusRequest = new AudioFocusRequest.Builder(AudioAttributes.USAGE_MEDIA)
                     .setOnAudioFocusChangeListener(this)
@@ -159,18 +241,18 @@ class MediaSessionCallback extends MediaSessionCompat.Callback implements AudioM
 
 
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-
-            if (playbackStateCompat.getState() == PlaybackStateCompat.STATE_PAUSED) {
+            callEvent("Play");
+            if (mediaSessionCompat.getController().getPlaybackState().getState() == PlaybackStateCompat.STATE_PAUSED) {
                 mMediaPlayer.start();
                 mediaSessionCompat.setActive(true);
-                playbackStateCompat = new PlaybackStateCompat.Builder()
+                playbackStateCompat = plBuilder
                         .setState(PlaybackStateCompat.STATE_PLAYING, mMediaPlayer.getCurrentPosition(), 1.0f)
-                        .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_STOP | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_PAUSE)
+                        .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_STOP | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_SEEK_TO)
                         .build();
                 mediaSessionCompat.setPlaybackState(playbackStateCompat);
-
-
-                notification = new MediaNotification(playbackStateCompat, context, mediaSessionCompat.getSessionToken()).generateNotification();
+                Notification notification = new MediaNotification(context, mediaSessionCompat).generateNotification();
+                mediaPlaybackService.startForeground(1, notification);
+                updateProgress("ONPLAY");
                 try {
                     context.registerReceiver(noisyReceiver
                             , new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
@@ -179,38 +261,64 @@ class MediaSessionCallback extends MediaSessionCompat.Callback implements AudioM
                 }
 
 
-                updateProgress();
-
             } else {
                 mMediaPlayer.reset();
                 try {
-                    mMediaPlayer.setDataSource("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");//TODO:add data source, setMetadata()
-                } catch (IOException e) {
-                    Log.e("MediaSessionCallback", e.getMessage());
+                    MediaItem item = MediaItem.fromMap(mediaQueue.get(currentItem));
+                    setMetaData(0, false);
+                    mMediaPlayer.setDataSource(item.source);
+                    mMediaPlayer.prepareAsync();
+                    playbackStateCompat = plBuilder
+                            .setState(PlaybackStateCompat.STATE_BUFFERING, 0, 1.0f)
+//                            .setActions(PlaybackStateCompat.ACTION_SKIP_TO_NEXT|PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS)
+                            .build();
+                    mediaSessionCompat.setPlaybackState(playbackStateCompat);
+                    Notification notification = new MediaNotification(context, mediaSessionCompat).generateNotification();
+                    mediaPlaybackService.startForeground(1, notification);
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage());
                 }
-                mMediaPlayer.prepareAsync();
-                playbackStateCompat = new PlaybackStateCompat.Builder()
-                        .setState(PlaybackStateCompat.STATE_BUFFERING, 0, 1.0f)
-                        .build();
-                mediaSessionCompat.setPlaybackState(playbackStateCompat);
-                notification = new MediaNotification(playbackStateCompat, context, mediaSessionCompat.getSessionToken()).generateNotification();
             }
 
-            mediaPlaybackService.startForeground(1, notification);
+
         }
-        Log.i("MediaSessionCallback", "Playing");
+        Log.e(TAG, "Playing");
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        callEvent("Prepared");
+        mp.start();
+        mediaSessionCompat.setActive(true);
+        playbackStateCompat = plBuilder
+                .setState(PlaybackStateCompat.STATE_PLAYING, mp.getCurrentPosition(), 1.0f)
+                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_STOP | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_SEEK_TO)
+                .build();
+        mediaSessionCompat.setPlaybackState(playbackStateCompat);
+        setMetaData(mp.getDuration(), false);
+        Notification notification = new MediaNotification(context, mediaSessionCompat).generateNotification();
+        notificationManager.notify(1, notification);
+        updateProgress("ONPrepared");
+        try {
+            context.registerReceiver(noisyReceiver
+                    , new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
+        } catch (IllegalStateException err) {
+            Log.e("NoisyReceiver", err.getMessage());
+        }
+        Log.e(TAG, "Prepared");
     }
 
     @Override
     public void onPause() {
+        callEvent("Pause");
         super.onPause();
         mMediaPlayer.pause();
-        playbackStateCompat = new PlaybackStateCompat.Builder()
+        playbackStateCompat = plBuilder
                 .setState(PlaybackStateCompat.STATE_PAUSED, mMediaPlayer.getCurrentPosition(), 1.0f)
-                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_STOP | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_PLAY)
+                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_STOP | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_SEEK_TO)
                 .build();
         mediaSessionCompat.setPlaybackState(playbackStateCompat);
-        Notification notification = new MediaNotification(playbackStateCompat, context, mediaSessionCompat.getSessionToken()).generateNotification();
+        Notification notification = new MediaNotification(context, mediaSessionCompat).generateNotification();
         notificationManager.notify(1, notification);
         mediaPlaybackService.stopForeground(false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -224,39 +332,69 @@ class MediaSessionCallback extends MediaSessionCompat.Callback implements AudioM
         } catch (IllegalStateException err) {
             Log.e("NoisyReceiver", err.getMessage());
         }
-        Log.i("MediaSessionCallback", "Paused");
+        Log.e(TAG, "Paused");
     }
 
     @Override
     public void onSkipToNext() {
+        callEvent("Next");
         super.onSkipToNext();
-        playbackStateCompat = new PlaybackStateCompat.Builder()
+        playbackStateCompat = plBuilder
                 .setState(PlaybackStateCompat.STATE_SKIPPING_TO_NEXT, 0, 1.0f)
-                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_STOP | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS | PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
+                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_STOP | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SEEK_TO)
                 .build();
         mediaSessionCompat.setPlaybackState(playbackStateCompat);
-        ///TODO:maybe change metadata
-        onPlay();
-        Log.i("MediaSessionCallback", "Next");
+        int repeat = mediaSessionCompat.getController().getRepeatMode();
+        if (repeat == PlaybackStateCompat.REPEAT_MODE_ONE) {
+            onPlay();
+            return;
+        } else {
+            int shuffle = mediaSessionCompat.getController().getShuffleMode();
+            if (shuffle == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
+                currentItem = new Random().nextInt(mediaQueue.size());
+                onPlay();
+                return;
+            } else {
+                currentItem = mediaQueue.size() == currentItem + 1 ? 0 : currentItem + 1;
+                onPlay();
+            }
+        }
+        Log.e(TAG, "Next");
     }
 
     @Override
     public void onSkipToPrevious() {
+        callEvent("Previous");
         super.onSkipToPrevious();
-        playbackStateCompat = new PlaybackStateCompat.Builder()
+        playbackStateCompat = plBuilder
                 .setState(PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS, 0, 1.0f)
-                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_STOP | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS | PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
+                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_STOP | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SEEK_TO)
                 .build();
         mediaSessionCompat.setPlaybackState(playbackStateCompat);
-        onPlay();
-        Log.i("MediaSessionCallback", "Previous");
+        int repeat = mediaSessionCompat.getController().getRepeatMode();
+        if (repeat == PlaybackStateCompat.REPEAT_MODE_ONE) {
+            onPlay();
+            return;
+        } else {
+            int shuffle = mediaSessionCompat.getController().getShuffleMode();
+            if (shuffle == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
+                currentItem = new Random().nextInt(mediaQueue.size());
+                onPlay();
+                return;
+            } else {
+                currentItem = currentItem == 0 ? mediaQueue.size() - 1 : currentItem - 1;
+                onPlay();
+            }
+        }
+        Log.e(TAG, "Previous");
     }
 
     @Override
     public void onStop() {
+        callEvent("Stop");
         super.onStop();
         mMediaPlayer.stop();
-        playbackStateCompat = new PlaybackStateCompat.Builder()
+        playbackStateCompat = plBuilder
                 .setState(PlaybackStateCompat.STATE_STOPPED, 0, 1.0f)
                 .setActions(PlaybackStateCompat.ACTION_PLAY)
                 .build();
@@ -269,52 +407,44 @@ class MediaSessionCallback extends MediaSessionCompat.Callback implements AudioM
         } else {
             audioManager.abandonAudioFocus(this);
         }
-        Log.i("MediaSessionCallback", "Stopped");
+        Log.e(TAG, "Stopped");
     }
 
 
     @Override
-    public void onPrepared(MediaPlayer mp) {
-        mp.start();
-        mediaSessionCompat.setActive(true);
-        playbackStateCompat = new PlaybackStateCompat.Builder()
-                .setState(PlaybackStateCompat.STATE_PLAYING, 0, 1.0f)
-                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_STOP | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_PAUSE)
+    public void onSeekTo(long pos) {
+        Log.e("SEEK", "" + pos);
+        callEvent("Seek");
+        mMediaPlayer.seekTo((int) pos);
+        playbackStateCompat = plBuilder
+                .setState(PlaybackStateCompat.STATE_PLAYING, pos, 1.0f)
+                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_STOP | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_SEEK_TO)
                 .build();
         mediaSessionCompat.setPlaybackState(playbackStateCompat);
-
-        Notification notification = new MediaNotification(playbackStateCompat, context, mediaSessionCompat.getSessionToken()).generateNotification();
-        notificationManager.notify(1, notification);
-        updateProgress();
-        try {
-            context.registerReceiver(noisyReceiver
-                    , new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
-        } catch (IllegalStateException err) {
-            Log.e("NoisyReceiver", err.getMessage());
-        }
-        Log.i("MediaSessionCallback", "Prepared");
+        super.onSeekTo(pos);
     }
-
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        onPlay();
-        //TODO: check for shuffle and repeat or set it to mediaSession so that it can handle itself
-        Log.i("MediaSessionCallback", "Completed");
+        callEvent("Complete");
+        onSkipToNext();
+        Log.e(TAG, "Completed");
     }
 
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
+        callEvent("Buffer");
         //TODO: send bufer data to flutter
         Log.e("BUFFER", String.valueOf(percent));
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        Log.i("MediaSessionCallback", "Error in MediaPlayer, Code:" + what);
-        mediaPlaybackService.stopForeground(true);
+        callEvent("Error");
+        Log.e(TAG, "Error in MediaPlayer, Code:" + what);
+        mediaPlaybackService.stopSelf();
         mMediaPlayer.reset();
-        playbackStateCompat = new PlaybackStateCompat.Builder()
+        playbackStateCompat = plBuilder
                 .setState(PlaybackStateCompat.STATE_ERROR, 0, 1.0f)
                 .build();
         mediaSessionCompat.setPlaybackState(playbackStateCompat);
@@ -332,7 +462,7 @@ class MediaSessionCallback extends MediaSessionCompat.Callback implements AudioM
     private class NoisyReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
+            if (Objects.requireNonNull(intent.getAction()).equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
                 onPause();
             }
         }
