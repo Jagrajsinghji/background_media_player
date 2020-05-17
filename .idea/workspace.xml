@@ -6,32 +6,16 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_LOG_LEVEL" value="error" />
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="debug" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5626126b-dd5f-4474-be15-36780fe4b324" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/BackgroundMediaPlayer.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/Models/MediaItem.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/Models/Modes.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/Models/PlaybackState.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/BackgroundMediaPlayerPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/BackgroundMediaPlayerPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaNotification.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaNotification.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaPlaybackService.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaPlaybackService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaSessionCallback.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaSessionCallback.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/Option.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/background_media_player.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/background_media_player.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/background_media_player_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/test/background_media_player_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/BackgroundMediaPlayer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/BackgroundMediaPlayer.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/Models/PlaybackState.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/Models/PlaybackState.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -62,7 +46,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="dart.analysis.tool.window.force.activate" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/example/android" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />

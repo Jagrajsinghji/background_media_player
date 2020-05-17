@@ -33,9 +33,7 @@ public class MediaPlaybackService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e("INTENTS", intent.getAction());
         MediaButtonReceiver.handleIntent(mediaSessionCompat, intent);
-//        mediaSessionCallback.handleCustomIntents(intent);
         return START_NOT_STICKY;
     }
 

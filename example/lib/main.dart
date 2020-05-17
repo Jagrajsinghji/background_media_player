@@ -38,33 +38,31 @@ class _MyAppState extends State<MyApp> {
     })
   ];
 
-  int position, duration, percent;
-  PlaybackState state;
   @override
   void initState() {
     super.initState();
     BackgroundMediaPlayer.init();
     BackgroundMediaPlayer.setQueue(mediaQueue);
-    BackgroundMediaPlayer.onBufferUpdate((percent, duration) {
-      if (mounted)
-        setState(() {
-          this.percent = percent;
-          this.duration = duration;
-        });
-    });
-    BackgroundMediaPlayer.onUpdateProgress((position, duration) {
-      if (mounted)
-        setState(() {
-          this.position = position;
-          this.duration = duration;
-        });
-    });
-    BackgroundMediaPlayer.onUpdateState((state) {
-      if (mounted)
-        setState(() {
-          this.state = state;
-        });
-    });
+//    BackgroundMediaPlayer.onBufferUpdate((percent, duration) {
+//      if (mounted)
+//        setState(() {
+//          this.percent = percent;
+//          this.duration = duration;
+//        });
+//    });
+//    BackgroundMediaPlayer.onUpdateProgress((position, duration) {
+//      if (mounted)
+//        setState(() {
+//          this.position = position;
+//          this.duration = duration;
+//        });
+//    });
+//    BackgroundMediaPlayer.onUpdateState((state) {
+//      if (mounted)
+//        setState(() {
+//          this.state = state;
+//        });
+//    });
   }
 
   @override
@@ -107,11 +105,35 @@ class _MyAppState extends State<MyApp> {
               child: Text("Stop"),
             ),
             RaisedButton(
-              onPressed: () {},
-              child: Text("Send"),
+              onPressed: () {
+                BackgroundMediaPlayer.setNotificationColor(Colors.pink.value);
+              },
+              child: Text("Change Buffering Notification Color"),
             ),
-            Text(
-                "Position : $position\nDuration : $duration\nBufferPercent : $percent\nState : $state\n")
+            StreamBuilder<PlaybackState>(
+                stream: BackgroundMediaPlayer.onPlaybackStateChange,
+                builder: (context, snapshot) {
+                  PlaybackState state = snapshot.data;
+                  return StreamBuilder<int>(
+                      stream: BackgroundMediaPlayer.onBufferUpdate,
+                      builder: (context, snapshot1) {
+                        int percent = snapshot1.data;
+                        return StreamBuilder<int>(
+                            stream: BackgroundMediaPlayer.onDurationUpdate,
+                            builder: (context, snapshot2) {
+                              int duration = snapshot2.data;
+                              return StreamBuilder<int>(
+                                  stream:
+                                      BackgroundMediaPlayer.onPositionUpdate,
+                                  builder: (context, snapshot3) {
+                                    int position = snapshot3.data;
+                                    return Text(
+                                        "Position : $position\nDuration : $duration\nBufferPercent : $percent\nState : $state\nCurent Index : ${BackgroundMediaPlayer.currentItem}\n"
+                                            "pos percent ${((position??0)/(duration??1)*100)}");
+                                  });
+                            });
+                      });
+                })
           ],
         ),
       ),

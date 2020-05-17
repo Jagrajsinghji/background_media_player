@@ -3,7 +3,6 @@ package com.akaalapps.background_media_player;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.KeyEvent;
 
 import androidx.annotation.NonNull;
@@ -23,6 +22,7 @@ import io.flutter.plugin.common.MethodChannel;
  */
 public class BackgroundMediaPlayerPlugin implements FlutterPlugin {
     private BroadcastReceiver eventReceiver;
+    static Integer notificationColor = 0xff33b5e5;
 
     @Override
     public void onAttachedToEngine(@NonNull final FlutterPluginBinding flutterPluginBinding) {
@@ -30,9 +30,19 @@ public class BackgroundMediaPlayerPlugin implements FlutterPlugin {
         channel.setMethodCallHandler((call, result) -> {
             Intent intent = new Intent(flutterPluginBinding.getApplicationContext(), MediaPlaybackService.class);
             Context context = flutterPluginBinding.getApplicationContext();
-            Log.e("Method Call", call.method);
             intent.setAction(Intent.ACTION_MEDIA_BUTTON);
             switch (call.method) {
+                case "SetNotificationColor":
+                    Object color = call.arguments;
+                    if (color != null) {
+                        if (color instanceof Integer)
+                            notificationColor = (Integer) color;
+                        else
+                            notificationColor = (int) ((Long) call.arguments).longValue();
+                        result.success(true);
+                    } else
+                        result.error("Color must not be null", "Null Color Value", "Value of color is null");
+                    break;
                 case "Init": {
                     Map<Object, Object> data = new HashMap<>();
                     data.put("currentItem", MediaSessionCallback.currentItem);
@@ -134,7 +144,6 @@ public class BackgroundMediaPlayerPlugin implements FlutterPlugin {
         return new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, android.content.Intent intent) {
-                Log.e("event call", intent.getStringExtra("name"));
                 events.success(intent.getStringExtra("name"));
             }
         };

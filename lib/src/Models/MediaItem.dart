@@ -18,7 +18,7 @@ class MediaItem {
     return item;
   }
 
-  factory MediaItem.fromMap(Map<String, String> item) {
+  factory MediaItem.fromMap(Map item) {
     return new MediaItem._(item["title"], item["artist"], item["album"],
         item["albumArt"], item["source"]);
   }

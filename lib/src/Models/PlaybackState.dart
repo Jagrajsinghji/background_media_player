@@ -11,6 +11,7 @@ enum PlaybackState {
 
 PlaybackState getPlaybackStateFromInt(int state){
    switch(state){
+     case 8:
      case 6: state=4;break;
      case 7: state=5;break;
      case 9: state=6;break;
