@@ -6,20 +6,19 @@ enum RepeatMode {
   REPEAT_MODE_GROUP
 }
 
-enum ShuffleMode{
+enum ShuffleMode {
   SHUFFLE_MODE_INVALID,
   SHUFFLE_MODE_NONE,
   SHUFFLE_MODE_ALL,
   SHUFFLE_MODE_GROUP
-
 }
 
-RepeatMode getRepeatModeFromInt(int mode){
+RepeatMode getRepeatModeFromInt(int mode) {
   mode++;
   return RepeatMode.values.elementAt(mode);
 }
 
-ShuffleMode getShuffleModeFromInt(int mode){
+ShuffleMode getShuffleModeFromInt(int mode) {
   mode++;
   return ShuffleMode.values.elementAt(mode);
 }

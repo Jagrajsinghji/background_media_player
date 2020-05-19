@@ -40,8 +40,8 @@ class BackgroundMediaPlayer {
     _subscription = _eventChannel.receiveBroadcastStream().listen(_onEvent);
   }
 
-  static void setNotificationColor(int color)async{
-    await _channel.invokeMethod("SetNotificationColor",color);
+  static void setNotificationColor(int color) async {
+    await _channel.invokeMethod("SetNotificationColor", color);
   }
 
   static void setQueue(List<MediaItem> mQueue) async {

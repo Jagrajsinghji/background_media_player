@@ -1,5 +1,5 @@
 name: background_media_player
-description: Media Player
+description: Background Media Player plugin for Flutter. Currently work on Android only, iOS will be released soon. 
 version: 0.1.0
 homepage: https://github.com/Jagrajsinghji/background_media_player/blob/master/LICENSE
 
