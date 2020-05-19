@@ -1,11 +1,11 @@
 name: background_media_player
 description: Media Player
-version: 0.0.1
-author: Jagraj Singh <jagrajsinghji99@gmail.com>
-homepage:
+version: 0.1.0
+homepage: https://github.com/Jagrajsinghji/background_media_player/blob/master/LICENSE
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
+  flutter: ">=1.10.0"
 
 dependencies:
   flutter:
@@ -24,9 +24,13 @@ flutter:
   # The androidPackage and pluginClass identifiers should not ordinarily
   # be modified. They are used by the tooling to maintain consistency when
   # adding or updating assets for this project.
-  plugin:
-    androidPackage: com.akaalapps.background_media_player
-    pluginClass: BackgroundMediaPlayerPlugin
+   plugin:
+    platforms:
+      android:
+        package: com.akaalapps.background_media_player
+        pluginClass: BackgroundMediaPlayerPlugin
+      ios:
+        pluginClass: BackgroundMediaPlayerPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
