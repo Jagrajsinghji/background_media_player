@@ -26,7 +26,7 @@ class BackgroundMediaPlayer {
   static ShuffleMode shuffleMode;
   static PlaybackState playbackState;
   static int currentItem = 0;
-  static final List<MediaItem> mediaQueue = [];
+  static final List mediaQueue = [];
 
   static void init() async {
     Map data = await _channel.invokeMethod("Init");
@@ -36,7 +36,8 @@ class BackgroundMediaPlayer {
     playbackState = getPlaybackStateFromInt(data['playBackState'] ?? 0);
     List queue = data['mediaQueue'] ?? [];
     mediaQueue.clear();
-    queue.forEach((element) => mediaQueue.add(MediaItem.fromMap(element)));
+//    queue.forEach((element) => mediaQueue.add(MediaItem.fromMap(element)));
+    mediaQueue.addAll(queue);
     _subscription = _eventChannel.receiveBroadcastStream().listen(_onEvent);
   }
 
@@ -44,12 +45,12 @@ class BackgroundMediaPlayer {
     await _channel.invokeMethod("SetNotificationColor", color);
   }
 
-  static void setQueue(List<MediaItem> mQueue) async {
+  static void setQueue(List mQueue) async {
     mediaQueue.clear();
     mediaQueue.addAll(mQueue);
-    List<Map<String, String>> queue = [];
-    mediaQueue.forEach((element) => queue.add(element.toMap()));
-    await _channel.invokeMethod("SetQueue", queue);
+//    List<Map<String, String>> queue = [];
+//    mediaQueue.forEach((element) => queue.add(element.toMap()));
+    await _channel.invokeMethod("SetQueue", mQueue);
   }
 
   static void setRepeatMode(RepeatMode mode) async {
@@ -94,7 +95,6 @@ class BackgroundMediaPlayer {
   }
 
   static _onEvent(dynamic event) async {
-    print(event);
     await getCurrentIndex();
     List<String> data = event.toString().split(":");
     switch (data[0]) {
@@ -140,7 +140,7 @@ class BackgroundMediaPlayer {
 
   /// cancels event channel subscription only.
   /// caution : it does not destroys the media player
-  static destroy() {
+  static cancelStreams() {
     _subscription?.cancel();
     _playbackStateController?.close();
     _bufferController?.close();

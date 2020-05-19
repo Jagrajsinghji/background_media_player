@@ -9,60 +9,42 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final List<MediaItem> mediaQueue = [
-    MediaItem.fromMap({
-      "artist": "Sidhu Mosse Wala, Prem Dhillon, Nseeb",
-      "album": "This Is Sidhu Moose Wala",
+  /// These Five Fields are mandatory for media payer to work.
+  /// You can add additional fields for your app comfort but media player will ignore them all.
+  final List mediaQueue = [
+    {
+      "artist": "Baby Yoda",
+      "album": "My Playlist",
       "albumArt":
-          "https://drive.google.com/uc?export=view&id=1lMu-dvmlo-VrhdQ3yEhWTwCaSbKR8cVG",
-      "title": "Old Skool",
+          "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg",
+      "title": "First Song",
       "source": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-    }),
-    MediaItem.fromMap({
-      "artist": "Ragbeer Singh Beer",
-      "album": "Bandagi Nama",
+    },
+    {
+      "artist": "Baby Yoda",
+      "album": "My Playlist",
       "albumArt":
-          "https://drive.google.com/uc?export=view&id=1QxN2YicIYKAjUHckbu967608CDuessRb",
-      "title": "Sikh",
-      "source":
-          "https://firebasestorage.googleapis.com/v0/b/sikh-notes.appspot.com/o/Audio%20Books%2FBandagi%20Nama%40Ragveer%20Singh%20Beer%2F04.%20Sikh.mp3?alt=media&token=7bad8623-dff8-4311-be95-8beca24085c8",
-    }),
-    MediaItem.fromMap({
-      "artist": "Baba Sewa Singh Ji(Sant)",
-      "album": "Gur Sagar",
+          "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg",
+      "title": "Second Song",
+      "source": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    },
+    {
+      "artist": "Baby Yoda",
+      "album": "My Playlist",
       "albumArt":
-          "https://drive.google.com/uc?export=view&id=114Ow3xbIU2s7dzQL-9RxOYtYGcLOIEW3",
-      "title": "Gur Sagar",
-      "source":
-          "https://firebasestorage.googleapis.com/v0/b/sikh-notes.appspot.com/o/Audio%20Books%2FGur%20Sagar%40Baba%20Sewa%20Singh%20Ji%20(Sant)%2F01.Gur%20Sagar%20001-006.mp3?alt=media&token=1848c863-d97e-42c1-867f-74bc45ea41f7",
-    })
+          "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg",
+      "title": "Third Song",
+      "source": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    }
   ];
 
   @override
   void initState() {
     super.initState();
+
+    /// initializing media player
     BackgroundMediaPlayer.init();
     BackgroundMediaPlayer.setQueue(mediaQueue);
-//    BackgroundMediaPlayer.onBufferUpdate((percent, duration) {
-//      if (mounted)
-//        setState(() {
-//          this.percent = percent;
-//          this.duration = duration;
-//        });
-//    });
-//    BackgroundMediaPlayer.onUpdateProgress((position, duration) {
-//      if (mounted)
-//        setState(() {
-//          this.position = position;
-//          this.duration = duration;
-//        });
-//    });
-//    BackgroundMediaPlayer.onUpdateState((state) {
-//      if (mounted)
-//        setState(() {
-//          this.state = state;
-//        });
-//    });
   }
 
   @override
@@ -108,7 +90,7 @@ class _MyAppState extends State<MyApp> {
               onPressed: () {
                 BackgroundMediaPlayer.setNotificationColor(Colors.pink.value);
               },
-              child: Text("Change Buffering Notification Color"),
+              child: Text("Change Buffering Notification Color To Pink"),
             ),
             StreamBuilder<PlaybackState>(
                 stream: BackgroundMediaPlayer.onPlaybackStateChange,
@@ -129,7 +111,7 @@ class _MyAppState extends State<MyApp> {
                                     int position = snapshot3.data;
                                     return Text(
                                         "Position : $position\nDuration : $duration\nBufferPercent : $percent\nState : $state\nCurent Index : ${BackgroundMediaPlayer.currentItem}\n"
-                                            "pos percent ${((position??0)/(duration??1)*100)}");
+                                        "pos percent ${((position ?? 0) / (duration ?? 1) * 100)}");
                                   });
                             });
                       });
@@ -138,5 +120,12 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    /// Canceling all streams
+    BackgroundMediaPlayer.cancelStreams();
+    super.dispose();
   }
 }
