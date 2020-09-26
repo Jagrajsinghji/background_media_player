@@ -3,32 +3,60 @@ import 'dart:async';
 import 'package:background_media_player/background_media_player.dart';
 import 'package:flutter/services.dart';
 
+import 'Models/MediaPlayerState.dart';
 import 'Models/Modes.dart';
 import 'Models/PlaybackState.dart';
 
 class BackgroundMediaPlayer {
+  /// Method Channel
   static const MethodChannel _channel =
       const MethodChannel('background_media_player_method');
+
+  /// Event Channel
   static const EventChannel _eventChannel =
       const EventChannel('background_media_player_event');
 
+  /// StreamSubscription to hold _eventChannel incoming stream
   static StreamSubscription _subscription;
 
-  static StreamController<int> _duartionController =
-      StreamController.broadcast();
-  static StreamController<int> _bufferController = StreamController.broadcast();
-  static StreamController<PlaybackState> _playbackStateController =
-      StreamController.broadcast();
-  static StreamController<int> _positionController =
+  /// StreamController of type [MediaPlayerState]
+  /// tells the current state of MediaPlayer.
+  static StreamController<MediaPlayerState> _mediaPlayerStateController =
       StreamController.broadcast();
 
+  /// [RepeatMode] of Media Player
   static RepeatMode repeatMode;
+
+  ///[ShuffleMode] of Media Player
   static ShuffleMode shuffleMode;
+
+  ///[PlaybackState] of Media Player
   static PlaybackState playbackState;
+
+  /// [int] index of current Item Playing in [BackgroundMediaPlayer.mediaQueue]
   static int currentItem = 0;
+
+  /// MediaPlayer Queue holds media
+  /// It takes Map as element and the necessary fields
+  /// of the each map item are :-
+  ///{    "artist": "Baby Yoda",
+  ///      "album": "My Playlist",
+  ///      "albumArt":
+  ///          "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg",
+  ///      "title": "First Song",
+  ///      "source": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+  ///      }
+  ///      You can Pass Other fields as per requirement
+  ///      but at plugin level they will get ignored
+  ///      because I am currently picking only
+  ///      `artist`,`album`,albumArt,`title`,source
   static List mediaQueue = [];
 
-  static void init() async {
+  /// Initialises the Plugin
+  /// return [Future] when fully initialise the plugin.
+  /// It is recommended to perform other operations after a
+  /// successful initialisation.
+  static Future<bool> init() async {
     Map data = await _channel.invokeMethod("Init");
     currentItem = data['currentItem'] ?? 0;
     shuffleMode = getShuffleModeFromInt(data['shuffleMode'] ?? -1);
@@ -36,124 +64,106 @@ class BackgroundMediaPlayer {
     playbackState = getPlaybackStateFromInt(data['playBackState'] ?? 0);
     List queue = data['mediaQueue'] ?? [];
     mediaQueue.clear();
-//    queue.forEach((element) => mediaQueue.add(MediaItem.fromMap(element)));
-    mediaQueue =queue;
+    mediaQueue.addAll(queue);
     _subscription = _eventChannel.receiveBroadcastStream().listen(_onEvent);
+    return true;
   }
 
+  /// Sets Notification Color of Buffering Notification.
+  /// Buffering Notification shows when MediaPlayer is buffering while playing
   static void setNotificationColor(int color) async {
     await _channel.invokeMethod("SetNotificationColor", color);
   }
 
+  ///Sets [mediaQueue]
   static void setQueue(List mQueue) async {
     mediaQueue.clear();
-    mediaQueue = mQueue;
-//    List<Map<String, String>> queue = [];
-//    mediaQueue.forEach((element) => queue.add(element.toMap()));
+    mediaQueue.addAll(mQueue);
+    currentItem = 0 ;
     await _channel.invokeMethod("SetQueue", mediaQueue);
   }
 
+  ///Sets [repeatMode]
   static void setRepeatMode(RepeatMode mode) async {
     repeatMode = mode;
     await _channel.invokeMethod("SetRepeatMode", mode.index - 1);
   }
 
+  ///Sets [shuffleMode]
   static void setShuffleMode(ShuffleMode mode) async {
     shuffleMode = mode;
     await _channel.invokeMethod("SetShuffleMode", mode.index - 1);
   }
 
+  ///Get Current Item index.
+  ///It automatically updates the [currentItem].
   static Future<int> getCurrentIndex() async {
     currentItem = await _channel.invokeMethod("GetCurrentIndex");
     return currentItem;
   }
 
+  ///Play item at @param index of [mediaQueue] in MediaPlayer.
   static void play(int index) async {
     currentItem = index;
     await _channel.invokeMethod('Play', index);
   }
 
+  /// Play/Pause action
   static void toggle() async {
     await _channel.invokeMethod('Toggle');
   }
 
+  ///Skip to Next
   static void next() async {
     await _channel.invokeMethod('Next');
   }
 
+  ///Skip to Previous
   static void prev() async {
     await _channel.invokeMethod('Prev');
   }
 
+  ///Stop Media Player
+  ///It just stop the service, it does not destroy and release media player.
   static void stop() async {
     await _channel.invokeMethod('Stop');
   }
 
-  static void seekTo(Duration duration) async {
-    int millis = duration.inMilliseconds;
-    await _channel.invokeMethod("SeekTo", millis);
+  ///Seek Current Position to a Particular Position
+  static void seekTo(int milliSec) async {
+    await _channel.invokeMethod("SeekTo", milliSec);
   }
 
+  /// Callback for [_eventChannel] stream
   static _onEvent(dynamic event) async {
     await getCurrentIndex();
     List<String> data = event.toString().split(":");
     switch (data[0]) {
       case "UpdateProgress":
-        assert(data.length == 3);
-        int _currentPos = int.parse(data[1] ?? "0");
-        int _duration = int.parse(data[2] ?? "0");
-        _positionController.sink.add(_currentPos);
-        _duartionController.sink.add(_duration);
-
-        break;
-      case "UpdateState":
-        assert(data.length == 2);
-        int _state = int.parse(data[1] ?? "0");
-        _playbackStateController.sink.add(getPlaybackStateFromInt(_state));
-        break;
-      case "BufferUpdate":
-        assert(data.length == 3);
-        int _percent = int.parse(data[1] ?? "0");
-        int _duration = int.parse(data[2] ?? "0");
-        _bufferController.sink.add(_percent);
-        _duartionController.sink.add(_duration);
+        assert(data.length == 5);
+        int pos = int.parse(data[1] ?? "0");
+        int dur = int.parse(data[2] ?? "0");
+        int buffer = int.parse(data[3] ?? "0");
+        int state = int.parse(data[4] ?? "0");
+        MediaPlayerState mediaPlayerState =
+            MediaPlayerState(pos, dur, buffer, state);
+        _mediaPlayerStateController.add(mediaPlayerState);
         break;
       default:
-        print("no callback for event ${data[0]}");
+        print("No callback for event ${data[0]}");
     }
   }
-
-//  static void onUpdateProgress(Function(int position,int duration) callback){
-//    _listeners.addAll({
-//      "UpdateProgress":callback
-//    });
-//  }
-//  static void onUpdateState(Function(PlaybackState state) callback){
-//    _listeners.addAll({
-//      "UpdateState":callback
-//    });}
-//  static void onBufferUpdate(Function(int percent, int duration)callback){
-//    _listeners.addAll({
-//      "BufferUpdate":callback
-//    });
-//  }
 
   /// cancels event channel subscription only.
   /// caution : it does not destroys the media player
   static cancelStreams() {
     _subscription?.cancel();
-    _playbackStateController?.close();
-    _bufferController?.close();
-    _duartionController?.close();
-    _positionController?.close();
+    _mediaPlayerStateController?.close();
   }
 
-  static Stream<int> get onBufferUpdate => _bufferController.stream;
-
-  static Stream<PlaybackState> get onPlaybackStateChange =>
-      _playbackStateController.stream;
-
-  static Stream<int> get onPositionUpdate => _positionController.stream;
-
-  static Stream<int> get onDurationUpdate => _duartionController.stream;
+  ///return a stream of type [MediaPlayerState]
+  ///gets triggered when a listener is active
+  ///and [_eventChannel] receive events.
+  static Stream<MediaPlayerState> get onStateChange =>
+      _mediaPlayerStateController.stream;
 }

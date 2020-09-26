@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/background_media_player.iml" filepath="$PROJECT_DIR$/background_media_player.iml" />
+      <module fileurl="file://$PROJECT_DIR$/background_media_player.iml" filepath="$PROJECT_DIR$/background_media_player.iml" group="background_media_player" />
     </modules>
   </component>
 </project>

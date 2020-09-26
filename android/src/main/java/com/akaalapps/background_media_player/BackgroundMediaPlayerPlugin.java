@@ -21,16 +21,18 @@ import io.flutter.plugin.common.MethodChannel;
  * BackgroundMediaPlayerPlugin
  */
 public class BackgroundMediaPlayerPlugin implements FlutterPlugin {
-    private BroadcastReceiver eventReceiver;
     static Integer notificationColor = 0xff33b5e5;
+    private BroadcastReceiver eventReceiver;
+    private MethodChannel _channel;
+    private EventChannel _eventC;
+
 
     @Override
     public void onAttachedToEngine(@NonNull final FlutterPluginBinding flutterPluginBinding) {
-        final MethodChannel channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "background_media_player_method");
-        channel.setMethodCallHandler((call, result) -> {
+        _channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "background_media_player_method");
+        _channel.setMethodCallHandler((call, result) -> {
             Intent intent = new Intent(flutterPluginBinding.getApplicationContext(), MediaPlaybackService.class);
             Context context = flutterPluginBinding.getApplicationContext();
-            intent.setAction(Intent.ACTION_MEDIA_BUTTON);
             switch (call.method) {
                 case "SetNotificationColor":
                     Object color = call.arguments;
@@ -61,6 +63,7 @@ public class BackgroundMediaPlayerPlugin implements FlutterPlugin {
                     List<Map<String, String>> args = (List<Map<String, String>>) call.arguments;
                     MediaSessionCallback.mediaQueue.clear();
                     MediaSessionCallback.mediaQueue.addAll(args);
+                    MediaSessionCallback.currentItem = 0;
                     result.success(true);
                     break;
                 case "SetRepeatMode":
@@ -82,35 +85,38 @@ public class BackgroundMediaPlayerPlugin implements FlutterPlugin {
                     break;
                 case "Play":
                     MediaSessionCallback.currentItem = (int) call.arguments;
-                    intent.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY));
+                    intent.setAction(MediaSessionCallback.ACTION_PLAY);
                     context.startService(intent);
                     result.success("Playing");
                     break;
                 case "Toggle":
+                    intent.setAction(Intent.ACTION_MEDIA_BUTTON);
                     intent.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE));
                     context.startService(intent);
-                    result.success("Paused");
+                    result.success("Toggle");
                     break;
                 case "Next":
+                    intent.setAction(Intent.ACTION_MEDIA_BUTTON);
                     intent.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_NEXT));
                     context.startService(intent);
                     result.success("Next");
                     break;
                 case "Prev":
+                    intent.setAction(Intent.ACTION_MEDIA_BUTTON);
                     intent.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PREVIOUS));
                     context.startService(intent);
                     result.success("Prev");
                     break;
                 case "Stop":
+                    intent.setAction(Intent.ACTION_MEDIA_BUTTON);
                     intent.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_STOP));
                     context.startService(intent);
                     result.success("Stop");
                     break;
                 case "SeekTo":
                     if (MediaSessionCallback.mediaSessionCompat != null)
-                        MediaSessionCallback.mediaSessionCompat.getController().getTransportControls().seekTo((long) call.arguments);
+                        MediaSessionCallback.mediaSessionCompat.getController().getTransportControls().seekTo(Long.valueOf((Integer) call.arguments));
                     break;
-
                 default:
                     result.notImplemented();
             }
@@ -138,6 +144,15 @@ public class BackgroundMediaPlayerPlugin implements FlutterPlugin {
 
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+        if (_channel != null)
+            _channel.setMethodCallHandler(null);
+        _channel = null;
+        if (_eventC != null)
+            _eventC.setStreamHandler(null);
+        _eventC = null;
+        if (eventReceiver != null)
+            binding.getApplicationContext().unregisterReceiver(eventReceiver);
+
     }
 
     private BroadcastReceiver createEventReceiver(final EventChannel.EventSink events) {

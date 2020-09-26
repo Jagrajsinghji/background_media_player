@@ -12,4 +12,4 @@ iOS will be released soon.
     Lockscreen Album Art (> Android N)
 
 
-##PR's are welcom if you want more functionanlity.
+##PR's are welcome if you want more functionality.
