@@ -210,9 +210,9 @@ class MediaSessionCallback extends MediaSessionCompat.Callback implements AudioM
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
-        callEvent("BufferUpdate:" + 0 + ":" + 0);
-        callEvent("UpdateProgress:" + 0 + ":" + 0);
-        callEvent("UpdateState:" + mediaSessionCompat.getController().getPlaybackState().getState());
+        // callEvent("BufferUpdate:" + 0 + ":" + 0);
+        // callEvent("UpdateProgress:" + 0 + ":" + 0);
+        // callEvent("UpdateState:" + mediaSessionCompat.getController().getPlaybackState().getState());
         Log.e(TAG, "Media Player Released");
     }
 

@@ -26,7 +26,7 @@ class BackgroundMediaPlayer {
   static ShuffleMode shuffleMode;
   static PlaybackState playbackState;
   static int currentItem = 0;
-  static final List mediaQueue = [];
+  static List mediaQueue = [];
 
   static void init() async {
     Map data = await _channel.invokeMethod("Init");
@@ -37,7 +37,7 @@ class BackgroundMediaPlayer {
     List queue = data['mediaQueue'] ?? [];
     mediaQueue.clear();
 //    queue.forEach((element) => mediaQueue.add(MediaItem.fromMap(element)));
-    mediaQueue.addAll(queue);
+    mediaQueue =queue;
     _subscription = _eventChannel.receiveBroadcastStream().listen(_onEvent);
   }
 
@@ -47,10 +47,10 @@ class BackgroundMediaPlayer {
 
   static void setQueue(List mQueue) async {
     mediaQueue.clear();
-    mediaQueue.addAll(mQueue);
+    mediaQueue = mQueue;
 //    List<Map<String, String>> queue = [];
 //    mediaQueue.forEach((element) => queue.add(element.toMap()));
-    await _channel.invokeMethod("SetQueue", mQueue);
+    await _channel.invokeMethod("SetQueue", mediaQueue);
   }
 
   static void setRepeatMode(RepeatMode mode) async {
