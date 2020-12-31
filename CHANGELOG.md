@@ -1,9 +1,9 @@
 ## 0.1.3
     Resolved Error:  ''Context.startForegroundService() did not then call Service.startForeground()"
-    Breaking Changes:
+    **Breaking Changes**:
 	Removed Previously used streams.
 	Added Streams:
-		onPrepared
+	     	onPrepared
 		onPlay
 		onPause
 		onStopped
@@ -16,6 +16,7 @@
 		onSkipToNext
 		onSkipToPrevious
 		onBufferUpdate
+	added mediaQueue, optional parameter in play method, if not null then first it will set this queue and then play the given item at index.	
 		
 ## 0.1.2
     Setting List of Map as mediaQueue.
