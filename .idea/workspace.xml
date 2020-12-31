@@ -2,44 +2,41 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1820952b-0a87-4a5f-bc69-f797d6b94f29" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/AppStates/MusicPlayerBloc.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/../.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/BackgroundMediaPlayerPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/BackgroundMediaPlayerPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaItem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaNotification.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaNotification.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaPlaybackService.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaPlaybackService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaSessionCallback.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaSessionCallback.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/res/drawable/launch_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/res/drawable/launch_background.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/res/values/styles.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/app/src/debug/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/src/debug/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/app/src/main/java/com/akaalapps/background_media_player_example/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/src/main/java/com/akaalapps/background_media_player_example/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/app/src/main/res/drawable/launch_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/src/main/res/drawable/launch_background.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/src/main/res/values/styles.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/app/src/profile/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/src/profile/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/test/widget_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/test/widget_test.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/background_media_player.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/background_media_player.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/src/BackgroundMediaPlayer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/BackgroundMediaPlayer.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/background_media_player_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/test/background_media_player_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/Models/MediaItem.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/Models/MediaPlayerState.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ios/Flutter/flutter_export_environment.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/Flutter/flutter_export_environment.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/AppScreens/Home/HomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppScreens/Home/HomePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/AppScreens/Home/HomeTab/HomeTab.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppScreens/Home/HomeTab/HomeTab.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/AppScreens/Home/HomeTab/TrendingLectures/TrendingLectures.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppScreens/Home/HomeTab/TrendingLectures/TrendingLectures.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/AppScreens/LecturesListScreen/LecturesListScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppScreens/LecturesListScreen/LecturesListScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/AppScreens/PDFScreens/PDFView.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppScreens/PDFScreens/PDFView.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/AppScreens/SearchScreen/SearchScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppScreens/SearchScreen/SearchScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/AppScreens/SplashScreen/SplashScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppScreens/SplashScreen/SplashScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/AppStates/AudioBooksBloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppStates/AudioBooksBloc.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/AppStates/AuthState.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppStates/AuthState.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/AppStates/TrendingLectureBloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppStates/TrendingLectureBloc.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/Model/AudioBook.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/Model/AudioBook.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/Model/Lecture.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/Model/Lecture.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/Test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/Test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/Utils/AudioBooks/PreferenceBoard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/Utils/AudioBooks/PreferenceBoard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/Utils/LecturesUtils/LectureListUtils.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/Utils/LecturesUtils/LectureListUtils.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/search.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/search.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,25 +51,27 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="ProjectId" id="1cBN0C303ZkFSk1m61kFlXjpEgn" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="false" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="dart.analysis.tool.window.force.activate" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="io.flutter.reload.alreadyRun" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/android" />
     <property name="project.structure.last.edited" value="Project" />
-    <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="terminal" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
-  <component name="RunManager" selected="Flutter.example/lib/main.dart">
+  <component name="RunManager">
     <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
       <option name="filePath" value="$PROJECT_DIR$/example/lib/main.dart" />
       <method v="2" />
@@ -96,39 +95,57 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <ignored-roots>
-      <path value="$PROJECT_DIR$/.." />
-    </ignored-roots>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1323" height="329" key="GridCell.Tab.0.bottom" timestamp="1601099335348">
+    <state x="488" y="80" key="#com.intellij.ide.util.MemberChooser" timestamp="1608975952274">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="329" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1601099335348" />
-    <state width="1323" height="329" key="GridCell.Tab.0.center" timestamp="1601099335347">
+    <state x="488" y="80" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1608975952274" />
+    <state x="413" y="111" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1609393486128">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="329" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1601099335347" />
-    <state width="1323" height="329" key="GridCell.Tab.0.left" timestamp="1601099335347">
+    <state x="413" y="111" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1366.728@0.0.1366.728" timestamp="1609393486128" />
+    <state x="550" y="114" key="EnvironmentVariablesDialog" timestamp="1608969943760">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="329" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1601099335347" />
-    <state width="1323" height="329" key="GridCell.Tab.0.right" timestamp="1601099335347">
+    <state x="550" y="114" key="EnvironmentVariablesDialog/0.0.1366.728@0.0.1366.728" timestamp="1608969943760" />
+    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1609396570602">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="329" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1601099335347" />
-    <state x="294" y="13" key="SettingsEditor" timestamp="1601099484138">
+    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1609396570602" />
+    <state width="1323" height="150" key="GridCell.Tab.0.bottom" timestamp="1609398283181">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="294" y="13" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1601099484138" />
+    <state width="1323" height="150" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1609398283181" />
+    <state width="1323" height="150" key="GridCell.Tab.0.center" timestamp="1609398283181">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="150" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1609398283181" />
+    <state width="1323" height="150" key="GridCell.Tab.0.left" timestamp="1609398283181">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="150" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1609398283181" />
+    <state width="1323" height="150" key="GridCell.Tab.0.right" timestamp="1609398283181">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="150" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1609398283181" />
+    <state x="184" y="9" key="SettingsEditor" timestamp="1608970156963">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="184" y="9" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1608970156963" />
+    <state width="428" height="88" key="javadoc.popup.new" timestamp="1609398095529">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="428" height="88" key="javadoc.popup.new/0.0.1366.728@0.0.1366.728" timestamp="1609398095529" />
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1609397407566">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1609397407566" />
   </component>
 </project>

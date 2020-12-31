@@ -5,6 +5,8 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -26,6 +28,7 @@ class MediaNotification {
     final private MediaSessionCompat.Token token;
     final private NotificationManager notificationManager;
     final private MediaMetadataCompat metadataCompat;
+    final private String applicationName;
 
 
     MediaNotification(Context context, MediaSessionCompat mediaSessionCompat) {
@@ -34,7 +37,14 @@ class MediaNotification {
         this.token = mediaSessionCompat.getSessionToken();
         this.playbackStateCompat = mediaSessionCompat.getController().getPlaybackState();
         this.metadataCompat = mediaSessionCompat.getController().getMetadata();
-
+        final PackageManager pm = context.getApplicationContext().getPackageManager();
+        ApplicationInfo ai;
+        try {
+            ai = pm.getApplicationInfo(context.getApplicationContext().getPackageName(), 0);
+        } catch (final PackageManager.NameNotFoundException e) {
+            ai = null;
+        }
+        this.applicationName = (String) (ai != null ? pm.getApplicationLabel(ai) : "Application");
 
     }
 
@@ -66,8 +76,10 @@ class MediaNotification {
                 .setContentText(description.getSubtitle())
                 .setSubText(description.getDescription())
                 .setContentIntent(PendingIntent.getActivity(context, 0, context.getPackageManager().getLaunchIntentForPackage(context.getPackageName()), PendingIntent.FLAG_UPDATE_CURRENT))
-                .setDeleteIntent(
-                        MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_STOP));
+//                .setDeleteIntent(
+//                        CustomMediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_STOP0))
+                ;
+
         if (playbackStateCompat.getState() == PlaybackStateCompat.STATE_PLAYING) {
             Log.e("TAG", "generateNotification: state playing");
             notificationBuilder
@@ -76,10 +88,11 @@ class MediaNotification {
                     .addAction(new NotificationCompat.Action.Builder(R.drawable.baseline_pause_black_36, "Pause", MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_PAUSE)).build())
                     .addAction(new NotificationCompat.Action.Builder(R.drawable.baseline_skip_next_black_36, "Next", MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_SKIP_TO_NEXT)).build())
                     .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-                            .setShowCancelButton(true)
-                            .setMediaSession(token)
-                            .setShowActionsInCompactView(0, 1, 2)
-                            .setCancelButtonIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_STOP)));
+                                    .setShowCancelButton(true)
+                                    .setMediaSession(token)
+                                    .setShowActionsInCompactView(0, 1, 2)
+//                            .setCancelButtonIntent(CustomMediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_STOP))
+                    );
         } else if (playbackStateCompat.getState() == PlaybackStateCompat.STATE_PAUSED) {
             Log.e("TAG", "generateNotification: state paused");
             notificationBuilder
@@ -88,20 +101,23 @@ class MediaNotification {
                     .addAction(new NotificationCompat.Action.Builder(R.drawable.baseline_play_arrow_black_36, "Pause", MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_PLAY)).build())
                     .addAction(new NotificationCompat.Action.Builder(R.drawable.baseline_skip_next_black_36, "Next", MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_SKIP_TO_NEXT)).build())
                     .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-                            .setShowCancelButton(true)
-                            .setMediaSession(token)
-                            .setShowActionsInCompactView(0, 1, 2)
-                            .setCancelButtonIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_STOP)));
+                                    .setShowCancelButton(true)
+                                    .setMediaSession(token)
+                                    .setShowActionsInCompactView(0, 1, 2)
+//                            .setCancelButtonIntent(CustomMediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_STOP))
+                    );
         } else {
             notificationBuilder
+                    .setLargeIcon(art)
                     .addAction(new NotificationCompat.Action.Builder(R.drawable.baseline_skip_previous_black_36, "Previous", MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS)).build())
-//                    .addAction(new NotificationCompat.Action.Builder(R.drawable.baseline_pause_black_36, "Pause", MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_PAUSE)).build())
+                    .addAction(new NotificationCompat.Action.Builder(R.drawable.baseline_pause_black_36, "Pause", MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_PAUSE)).build())
                     .addAction(new NotificationCompat.Action.Builder(R.drawable.baseline_skip_next_black_36, "Next", MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_SKIP_TO_NEXT)).build())
-//                    .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-//                            .setShowCancelButton(true)
-//                            .setMediaSession(token)
-//                            .setShowActionsInCompactView(0, 1)
-//                            .setCancelButtonIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_STOP)));
+                    .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
+                                    .setShowCancelButton(true)
+                                    .setMediaSession(token)
+                                    .setShowActionsInCompactView(0, 1)
+//                            .setCancelButtonIntent(CustomMediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_STOP))
+                    )
                     .setProgress(100, 50, true);
         }
         return notificationBuilder.build();

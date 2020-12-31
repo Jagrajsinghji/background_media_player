@@ -28,12 +28,13 @@ public class MediaPlaybackService extends Service {
         mediaSessionCompat.setMediaButtonReceiver(mbrIntent);
         mediaSessionCompat.setCallback(mediaSessionCallback);
         Log.e("MediaPlaybackService", "Service Created.");
+
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mediaSessionCallback.handleCustomAction(intent.getAction());
+        Log.e("StartCMD", String.valueOf(intent));
         MediaButtonReceiver.handleIntent(mediaSessionCompat, intent);
         return START_NOT_STICKY;
     }
@@ -44,9 +45,10 @@ public class MediaPlaybackService extends Service {
         return null;
     }
 
+
     @Override
     public void onDestroy() {
-        mediaSessionCallback.destroy();
+        mediaSessionCallback.release();
         mediaSessionCompat.release();
         super.onDestroy();
         Log.e("MediaPlaybackService", "Service Destroyed.");
@@ -54,4 +56,7 @@ public class MediaPlaybackService extends Service {
 
 
 }
+
+
+
 

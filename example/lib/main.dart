@@ -27,8 +27,9 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     /// initializing media player
-    BackgroundMediaPlayer.init()
-        .then((value) => BackgroundMediaPlayer.setQueue(mediaQueue));
+    BackgroundMediaPlayer.instance
+        .init()
+        .then((value) => BackgroundMediaPlayer.instance.setQueue(mediaQueue));
   }
 
   @override
@@ -38,94 +39,143 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Column(
-          children: <Widget>[
-            RaisedButton(
-              onPressed: () {
-                BackgroundMediaPlayer.play(0);
-              },
-              child: Text("Play"),
-            ),
-            RaisedButton(
-              onPressed: () {
-                BackgroundMediaPlayer.toggle();
-              },
-              child: Text("Pause"),
-            ),
-            RaisedButton(
-              onPressed: () {
-                BackgroundMediaPlayer.next();
-              },
-              child: Text("Next"),
-            ),
-            RaisedButton(
-              onPressed: () {
-                BackgroundMediaPlayer.prev();
-              },
-              child: Text("Prev"),
-            ),
-            RaisedButton(
-              onPressed: () {
-                BackgroundMediaPlayer.stop();
-              },
-              child: Text("Stop"),
-            ),
-            RaisedButton(
-              onPressed: () {
-                final List mediaQueue = [
-                  {
-                    "artist": "Baby Yoda",
-                    "album": "My Playlist",
-                    "albumArt":
-                        "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg",
-                    "title": "First Song",
-                    "source":
-                        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-                  },
-                  {
-                    "artist": "Baby Yoda",
-                    "album": "My Playlist",
-                    "albumArt":
-                        "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg",
-                    "title": "Second Song",
-                    "source":
-                        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-                  },
-                  {
-                    "artist": "Baby Yoda",
-                    "album": "My Playlist",
-                    "albumArt":
-                        "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg",
-                    "title": "Third Song",
-                    "source":
-                        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-                  }
-                ];
+        body: StreamBuilder<PlaybackState>(
+            stream: BackgroundMediaPlayer.instance.onPlaybackStateChange,
+            builder: (context, snapshot) {
+              var _playbackState = snapshot?.data;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  RaisedButton(
+                    onPressed: (_playbackState == PlaybackState.STATE_PLAYING)
+                        ? null
+                        : () {
+                            BackgroundMediaPlayer.instance.play(0);
+                          },
+                    child: Text("Play"),
+                  ),
+                  RaisedButton(
+                    onPressed: (_playbackState == PlaybackState.STATE_PLAYING)
+                        ? () {
+                            BackgroundMediaPlayer.instance.toggle();
+                          }
+                        : null,
+                    child: Text("Pause"),
+                  ),
+                  RaisedButton(
+                    onPressed: (_playbackState != PlaybackState.STATE_STOPPED)
+                        ? () {
+                            BackgroundMediaPlayer.instance.next();
+                          }
+                        : null,
+                    child: Text("Next"),
+                  ),
+                  RaisedButton(
+                    onPressed: (_playbackState != PlaybackState.STATE_STOPPED)
+                        ? () {
+                            BackgroundMediaPlayer.instance.prev();
+                          }
+                        : null,
+                    child: Text("Prev"),
+                  ),
+                  RaisedButton(
+                    onPressed: (_playbackState == PlaybackState.STATE_PLAYING)
+                        ? () {
+                            BackgroundMediaPlayer.instance.stop();
+                            // final List mediaQueue = [
+                            //   {
+                            //     "artist": "Baby Yoda",
+                            //     "album": "My Playlist",
+                            //     "albumArt":
+                            //         "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg",
+                            //     "title": "First Song",
+                            //     "source":
+                            //         "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                            //   },
+                            //   {
+                            //     "artist": "Baby Yoda",
+                            //     "album": "My Playlist",
+                            //     "albumArt":
+                            //         "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg",
+                            //     "title": "Second Song",
+                            //     "source":
+                            //         "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                            //   },
+                            //   {
+                            //     "artist": "Baby Yoda",
+                            //     "album": "My Playlist",
+                            //     "albumArt":
+                            //         "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg",
+                            //     "title": "Third Song",
+                            //     "source":
+                            //         "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                            //   }
+                            // ];
+                          }
+                        : null,
+                    child: Text("Stop"),
+                  ),
+                  RaisedButton(
+                    onPressed: () {
+                      final List mediaQueue = [
+                        {
+                          "artist": "Baby Yoda",
+                          "album": "My Playlist",
+                          "albumArt":
+                              "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg",
+                          "title": "First Song",
+                          "source":
+                              "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                        },
+                        {
+                          "artist": "Baby Yoda",
+                          "album": "My Playlist",
+                          "albumArt":
+                              "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg",
+                          "title": "Second Song",
+                          "source":
+                              "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                        },
+                        {
+                          "artist": "Baby Yoda",
+                          "album": "My Playlist",
+                          "albumArt":
+                              "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg",
+                          "title": "Third Song",
+                          "source":
+                              "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                        }
+                      ];
 
-                BackgroundMediaPlayer.setQueue(mediaQueue);
-              },
-              child: Text("SetQueue"),
-            ),
-            RaisedButton(
-              onPressed: () {
-                BackgroundMediaPlayer.setNotificationColor(Colors.pink.value);
-              },
-              child: Text("Change Buffering Notification Color To Pink"),
-            ),
-            StreamBuilder<MediaPlayerState>(
-                stream: BackgroundMediaPlayer.onStateChange,
-                builder: (context, snapshot) {
-                  PlaybackState state =
-                      snapshot.data?.playerState ?? PlaybackState.STATE_NONE;
-                  Duration position = snapshot.data?.position ?? Duration();
-                  Duration duration = snapshot.data?.duration ?? Duration();
-                  int percent = snapshot.data?.bufferPercent ?? Duration();
-                  return Text(
-                      "Position : $position\nDuration : $duration\nBufferPercent : $percent\nState : $state\nCurent Index : ${BackgroundMediaPlayer.currentItem}\n"
-                      "pos percent ${((position.inMilliseconds ?? 0) / (duration.inMilliseconds ?? 1) * 100)}");
-                })
-          ],
-        ),
+                      BackgroundMediaPlayer.instance.setQueue(mediaQueue);
+                    },
+                    child: Text("SetQueue"),
+                  ),
+                  StreamBuilder<PlaybackState>(
+                      stream:
+                          BackgroundMediaPlayer.instance.onPlaybackStateChange,
+                      builder: (context, playBackSnap) {
+                        return StreamBuilder<double>(
+                            stream:
+                                BackgroundMediaPlayer.instance.onDurationUpdate,
+                            builder: (context, durationSnap) {
+                              return StreamBuilder<double>(
+                                  stream: BackgroundMediaPlayer
+                                      .instance.onPositionUpdate,
+                                  builder: (context, positionSnap) {
+                                    return StreamBuilder<double>(
+                                        stream: BackgroundMediaPlayer
+                                            .instance.onBufferUpdate,
+                                        builder: (context, bufferSnap) {
+                                          return Text(
+                                              "PlayBackState: ${playBackSnap.data}\nDuration: ${durationSnap.data}\nPosition: ${positionSnap.data}\nBuffer Percent: ${bufferSnap.data}",textAlign: TextAlign.center,);
+                                        });
+                                  });
+                            });
+                      })
+                ],
+              );
+            }),
       ),
     );
   }
@@ -133,7 +183,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     /// Canceling all streams
-    BackgroundMediaPlayer.cancelStreams();
+    BackgroundMediaPlayer.instance.dispose();
     super.dispose();
   }
 }

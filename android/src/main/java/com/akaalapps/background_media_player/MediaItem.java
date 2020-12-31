@@ -18,7 +18,7 @@ class MediaItem {
         this.source = source;
     }
 
-     static MediaItem fromMap(Map<String, String> item) {
+    static MediaItem fromMap(Map<String, String> item) {
         return new MediaItem(item.get("title"), item.get("artist"), item.get("album"), item.get("albumArt"), item.get("source"));
     }
 
