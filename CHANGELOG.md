@@ -1,3 +1,5 @@
+## 0.1.4
+    Added method handler to a seperate class
 ## 0.1.3
     Resolved Error:  ''Context.startForegroundService() did not then call Service.startForeground()"
     **Breaking Changes**:
