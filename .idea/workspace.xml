@@ -1,43 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="1820952b-0a87-4a5f-bc69-f797d6b94f29" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../lib/AppStates/MusicPlayerBloc.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/../.flutter-plugins-dependencies" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/BackgroundMediaPlayerPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/BackgroundMediaPlayerPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaNotification.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaNotification.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaPlaybackService.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaPlaybackService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaSessionCallback.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/akaalapps/background_media_player/MediaSessionCallback.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/background_media_player.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/background_media_player.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/BackgroundMediaPlayer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/BackgroundMediaPlayer.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/Models/MediaItem.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/Models/MediaPlayerState.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ios/Flutter/flutter_export_environment.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/Flutter/flutter_export_environment.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/AppScreens/Home/HomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppScreens/Home/HomePage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/AppScreens/Home/HomeTab/HomeTab.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppScreens/Home/HomeTab/HomeTab.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/AppScreens/Home/HomeTab/TrendingLectures/TrendingLectures.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppScreens/Home/HomeTab/TrendingLectures/TrendingLectures.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/AppScreens/LecturesListScreen/LecturesListScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppScreens/LecturesListScreen/LecturesListScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/AppScreens/PDFScreens/PDFView.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppScreens/PDFScreens/PDFView.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/AppScreens/SearchScreen/SearchScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppScreens/SearchScreen/SearchScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/AppScreens/SplashScreen/SplashScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppScreens/SplashScreen/SplashScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/AppStates/AudioBooksBloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppStates/AudioBooksBloc.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/AppStates/AuthState.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppStates/AuthState.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/AppStates/TrendingLectureBloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/AppStates/TrendingLectureBloc.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/Model/AudioBook.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/Model/AudioBook.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/Model/Lecture.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/Model/Lecture.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/Test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/Test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/Utils/AudioBooks/PreferenceBoard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/Utils/AudioBooks/PreferenceBoard.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/Utils/LecturesUtils/LectureListUtils.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/Utils/LecturesUtils/LectureListUtils.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/search.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/search.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../pubspec.yaml" afterDir="false" />
-    </list>
+    <list default="true" id="1820952b-0a87-4a5f-bc69-f797d6b94f29" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -54,7 +39,9 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="ProjectId" id="1cBN0C303ZkFSk1m61kFlXjpEgn" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="false" />
@@ -71,7 +58,7 @@
     <property name="settings.editor.selected.configurable" value="terminal" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Flutter.example/lib/main.dart">
     <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
       <option name="filePath" value="$PROJECT_DIR$/example/lib/main.dart" />
       <method v="2" />
@@ -101,6 +88,9 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="488" y="80" key="#com.intellij.ide.util.MemberChooser" timestamp="1608975952274">
